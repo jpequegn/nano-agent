@@ -1,0 +1,22 @@
+{
+  "task_id": "BA-03",
+  "category": "bash",
+  "title": "Chain commands with pipe",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "There are 6 regular files in the project root.",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "run_bash",
+      "input": {
+        "command": "find . -maxdepth 1 -type f | wc -l"
+      },
+      "output": "6"
+    }
+  ],
+  "duration_s": 0.3,
+  "error": "",
+  "grade": "pass",
+  "notes": "Command chained correctly. Counted 6 files (dirs excluded)."
+}

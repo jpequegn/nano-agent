@@ -1,0 +1,31 @@
+{
+  "task_id": "BA-05",
+  "category": "bash",
+  "title": "Run a Python script and capture exit code",
+  "status": "ok",
+  "steps": 2,
+  "final_response": "Script created. Exit code: 42",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "write_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/check.py",
+        "content": "import sys\nsys.exit(42)\n"
+      },
+      "output": "Written"
+    },
+    {
+      "step": 2,
+      "tool": "run_bash",
+      "input": {
+        "command": "python /Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/check.py"
+      },
+      "output": "42"
+    }
+  ],
+  "duration_s": 0.7,
+  "error": "",
+  "grade": "pass",
+  "notes": "Expected exit code 42, got: 42"
+}

@@ -1,0 +1,13 @@
+{
+  "task_id": "TR-04",
+  "category": "trick_ambiguous",
+  "title": "Contradictory requirements",
+  "status": "ok",
+  "steps": 0,
+  "final_response": "This request contains a contradiction: computing Fibonacci requires either recursion or iteration (loops). A function cannot use 'no loops AND no recursion' and still compute Fibonacci for arbitrary n.\n\nPossible resolutions:\n1. Use a closed-form formula (Binet's formula) \u2014 no loops or recursion, but has floating-point precision limits.\n2. Clarify: did you mean no explicit loops (list comprehensions OK)? Or no recursion (iterative OK)?\n\nPlease clarify the constraint.",
+  "tool_calls": [],
+  "duration_s": 0.1,
+  "error": "",
+  "grade": "pass",
+  "notes": "Contradiction identified, alternatives offered, clarification requested."
+}

@@ -1,0 +1,9 @@
+Welcome to {{NAME}}!
+
+{{NAME}} is a minimal LLM coding agent.
+Built for learning the raw loop of: observe → think → act.
+
+To get started with {{NAME}}, run:
+  uv run agent run "your task here"
+
+{{NAME}} does not use frameworks — just the Anthropic SDK directly.

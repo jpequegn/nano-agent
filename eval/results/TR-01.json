@@ -1,0 +1,22 @@
+{
+  "task_id": "TR-01",
+  "category": "trick_ambiguous",
+  "title": "Read a file that doesn't exist",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "Error: File not found: /Users/julienpequegnot/Code/nano-agent/eval/fixtures/nonexistent_file_xyz.txt. Please provide a valid path.",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "read_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/nonexistent_file_xyz.txt"
+      },
+      "output": "[error]: FileNotFoundError: [Errno 2] No such file or directory: '/Users/julienpequegnot/Code/nano-agent/eval/fixtures/nonexistent_file_xyz.txt'"
+    }
+  ],
+  "duration_s": 0.1,
+  "error": "",
+  "grade": "pass",
+  "notes": "Tool raised FileNotFoundError. Without LLM: simulated correct error reporting."
+}
