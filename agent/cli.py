@@ -5,11 +5,27 @@ import sys
 
 
 def cmd_run(args: argparse.Namespace) -> None:
-    """Run the agent on a task (not yet implemented)."""
-    print("agent run: not yet implemented")
-    print(f"  task: {args.task or '(none provided)'}")
-    print(f"  model: {args.model}")
-    print(f"  max-steps: {args.max_steps}")
+    """Run the agent on a task."""
+    from agent.agent import Agent
+    from agent.tool_registry import ToolRegistry
+
+    task = args.task
+    if not task:
+        print("Error: a task description is required.", file=sys.stderr)
+        sys.exit(1)
+
+    # Build a minimal registry with a couple of built-in tools for the CLI
+    registry = ToolRegistry()
+
+    @registry.tool(description="Evaluate a Python expression and return the result as a string.")
+    def python_eval(expression: str) -> str:
+        return str(eval(expression))  # noqa: S307  # intentional for demo
+
+    agent = Agent(registry=registry, model=args.model, max_steps=args.max_steps)
+
+    print(f"Running agent (model={args.model}, max_steps={args.max_steps})…")
+    result = agent.run(task)
+    print(result)
 
 
 def cmd_logs(args: argparse.Namespace) -> None:

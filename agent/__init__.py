@@ -2,6 +2,7 @@
 
 __version__ = "0.1.0"
 
+from agent.agent import Agent
 from agent.tool_registry import ToolNotFoundError, ToolRegistry
 
-__all__ = ["ToolRegistry", "ToolNotFoundError"]
+__all__ = ["Agent", "ToolRegistry", "ToolNotFoundError"]
