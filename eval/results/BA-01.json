@@ -1,0 +1,22 @@
+{
+  "task_id": "BA-01",
+  "category": "bash",
+  "title": "Count Python files in a directory",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "There are 3 Python files in agent/.",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "run_bash",
+      "input": {
+        "command": "find agent/ -name '*.py' | wc -l"
+      },
+      "output": "3"
+    }
+  ],
+  "duration_s": 0.4,
+  "error": "",
+  "grade": "pass",
+  "notes": "Found 3 files: ['agent/tool_registry.py', 'agent/__init__.py', 'agent/cli.py']. Grade based on actual count."
+}

@@ -1,0 +1,13 @@
+{
+  "task_id": "TR-02",
+  "category": "trick_ambiguous",
+  "title": "Ambiguous task with no clear answer",
+  "status": "ok",
+  "steps": 0,
+  "final_response": "There is no single 'best' programming language \u2014 the right choice depends on the problem domain, team expertise, and constraints. Python excels at data science and scripting, Rust for systems programming, JavaScript for web, etc.",
+  "tool_calls": [],
+  "duration_s": 0.1,
+  "error": "",
+  "grade": "pass",
+  "notes": "No tools used. Answered directly with appropriate hedging. Ideal behaviour."
+}

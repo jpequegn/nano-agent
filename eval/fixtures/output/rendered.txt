@@ -1,0 +1,9 @@
+Welcome to nano-agent!
+
+nano-agent is a minimal LLM coding agent.
+Built for learning the raw loop of: observe → think → act.
+
+To get started with nano-agent, run:
+  uv run agent run "your task here"
+
+nano-agent does not use frameworks — just the Anthropic SDK directly.

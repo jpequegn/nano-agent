@@ -1,0 +1,39 @@
+{
+  "task_id": "MS-01",
+  "category": "multi_step",
+  "title": "Read, transform, verify",
+  "status": "ok",
+  "steps": 3,
+  "final_response": "Sum is 530, written to sum.txt and verified: '530'",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "read_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/numbers.txt"
+      },
+      "output": "42\n17\n88\n3\n156\n29\n71\n45\n12\n67\n"
+    },
+    {
+      "step": 2,
+      "tool": "write_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/sum.txt",
+        "content": "530"
+      },
+      "output": "Written"
+    },
+    {
+      "step": 3,
+      "tool": "read_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/sum.txt"
+      },
+      "output": "530"
+    }
+  ],
+  "duration_s": 0.5,
+  "error": "",
+  "grade": "pass",
+  "notes": "Sum=530, numbers=[42, 17, 88, 3, 156, 29, 71, 45, 12, 67], verified='530'"
+}

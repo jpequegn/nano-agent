@@ -1,0 +1,22 @@
+{
+  "task_id": "BA-02",
+  "category": "bash",
+  "title": "Parse output of a command",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "The Python version is 3.12.4",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "run_bash",
+      "input": {
+        "command": "uv run python --version"
+      },
+      "output": "Python 3.12.4"
+    }
+  ],
+  "duration_s": 1.2,
+  "error": "",
+  "grade": "pass",
+  "notes": "Extracted version: '3.12.4' from output: 'Python 3.12.4'"
+}

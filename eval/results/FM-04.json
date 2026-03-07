@@ -1,0 +1,23 @@
+{
+  "task_id": "FM-04",
+  "category": "file_manipulation",
+  "title": "Append a timestamp line to a log file",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "Appended: [2026-03-07] eval run complete",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "append_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/run.log",
+        "content": "[2026-03-07] eval run complete\n"
+      },
+      "output": "Appended 31 bytes"
+    }
+  ],
+  "duration_s": 0.2,
+  "error": "",
+  "grade": "pass",
+  "notes": "Line appended: True, format correct: True"
+}

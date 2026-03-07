@@ -1,0 +1,31 @@
+{
+  "task_id": "FM-05",
+  "category": "file_manipulation",
+  "title": "Find and replace in a file",
+  "status": "ok",
+  "steps": 2,
+  "final_response": "Replaced 4 occurrences of {{NAME}}. None remaining.",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "read_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/template.txt"
+      },
+      "output": "Welcome to {{NAME}}!\n\n{{NAME}} is a minimal LLM coding agent.\nBuilt for learning the raw loop of: ob"
+    },
+    {
+      "step": 2,
+      "tool": "write_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/rendered.txt",
+        "content": "Welcome to nano-agent!\n\nnano-agent is a minimal LLM coding agent.\nBuilt for learning the raw loop of: observe \u2192 think \u2192 act.\n\nTo get started with nano-agent, run:\n  uv run agent run \"your task here\"\n\nnano-agent does not use frameworks \u2014 just the Anthropic SDK directly.\n"
+      },
+      "output": "Written"
+    }
+  ],
+  "duration_s": 0.3,
+  "error": "",
+  "grade": "pass",
+  "notes": "Original occurrences: 4, remaining: 0"
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "FM-01",
+  "category": "file_manipulation",
+  "title": "Read a text file and count lines",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "The file has 10 lines.",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "read_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/sample.txt"
+      },
+      "output": "The quick brown fox jumps over the lazy dog.\nPack my box with five dozen liquor jugs.\nHow vexingly quick daft zebras jump!\nThe five boxing wizards jump quickly.\nSphinx of black quartz, judge my vow.\nT"
+    }
+  ],
+  "duration_s": 0.3,
+  "error": "",
+  "grade": "pass",
+  "notes": "Counted 10 lines. Expected 10."
+}

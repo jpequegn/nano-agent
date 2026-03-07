@@ -1,0 +1,272 @@
+{
+  "version": "1.0",
+  "description": "20 diverse evaluation tasks for nano-agent",
+  "categories": {
+    "file_manipulation": "Tasks involving reading, writing, and transforming files",
+    "bash": "Tasks involving shell commands, parsing output, and command chaining",
+    "multi_step": "Tasks requiring 3+ tool calls and reasoning across steps",
+    "trick_ambiguous": "Tasks designed to reveal failure modes: loops, ambiguity, impossible requests"
+  },
+  "tasks": [
+    {
+      "id": "FM-01",
+      "category": "file_manipulation",
+      "title": "Read a text file and count lines",
+      "prompt": "Read the file eval/fixtures/sample.txt and tell me how many lines it has.",
+      "expected_output": "The file has 10 lines.",
+      "expected_behavior": "Agent reads the file and counts newlines correctly.",
+      "grading": {
+        "pass": "Returns exactly 10 lines",
+        "partial": "Reads file but miscounts",
+        "fail": "Does not read the file or crashes"
+      }
+    },
+    {
+      "id": "FM-02",
+      "category": "file_manipulation",
+      "title": "Write a new file with specific content",
+      "prompt": "Create a file at eval/fixtures/output/hello.txt containing exactly the text: Hello, nano-agent!",
+      "expected_output": "File eval/fixtures/output/hello.txt created with content 'Hello, nano-agent!'",
+      "expected_behavior": "Agent creates file with exact content, no extra whitespace.",
+      "grading": {
+        "pass": "File exists with exact content",
+        "partial": "File exists but content differs slightly (extra newline, etc.)",
+        "fail": "File not created"
+      }
+    },
+    {
+      "id": "FM-03",
+      "category": "file_manipulation",
+      "title": "Transform CSV to uppercase",
+      "prompt": "Read eval/fixtures/data.csv, convert all values in the 'name' column to uppercase, and write the result to eval/fixtures/output/data_upper.csv.",
+      "expected_output": "CSV written with uppercase name column values.",
+      "expected_behavior": "Agent reads CSV, transforms it, writes output. Handles header row correctly.",
+      "grading": {
+        "pass": "Output CSV has uppercase names, other columns unchanged",
+        "partial": "Uppercased but also changed other columns or lost header",
+        "fail": "Did not produce output file"
+      }
+    },
+    {
+      "id": "FM-04",
+      "category": "file_manipulation",
+      "title": "Append a timestamp line to a log file",
+      "prompt": "Append a line to eval/fixtures/run.log in the format: '[YYYY-MM-DD] eval run complete'. Use today's date.",
+      "expected_output": "A line like '[2026-03-07] eval run complete' appended to run.log",
+      "expected_behavior": "Agent appends (not overwrites) a properly formatted date line.",
+      "grading": {
+        "pass": "Line appended with correct format and real date",
+        "partial": "Line appended but wrong format or placeholder date",
+        "fail": "File overwritten or nothing written"
+      }
+    },
+    {
+      "id": "FM-05",
+      "category": "file_manipulation",
+      "title": "Find and replace in a file",
+      "prompt": "In eval/fixtures/template.txt, replace every occurrence of '{{NAME}}' with 'nano-agent' and save the result to eval/fixtures/output/rendered.txt.",
+      "expected_output": "Output file with all '{{NAME}}' occurrences replaced by 'nano-agent'.",
+      "expected_behavior": "Agent reads template, performs substitution, writes output. All occurrences replaced.",
+      "grading": {
+        "pass": "All occurrences replaced, no leftover '{{NAME}}'",
+        "partial": "Some but not all occurrences replaced",
+        "fail": "No output or wrong substitution"
+      }
+    },
+    {
+      "id": "BA-01",
+      "category": "bash",
+      "title": "Count Python files in a directory",
+      "prompt": "How many .py files exist under the agent/ directory (including subdirectories)?",
+      "expected_output": "There are 2 Python files in the agent/ directory.",
+      "expected_behavior": "Agent runs find or similar, counts correctly.",
+      "grading": {
+        "pass": "Correct count returned",
+        "partial": "Runs command but miscounts or misinterprets output",
+        "fail": "Does not run any command"
+      }
+    },
+    {
+      "id": "BA-02",
+      "category": "bash",
+      "title": "Parse output of a command",
+      "prompt": "Run 'uv run python --version' and tell me the Python version number (just the numbers, e.g. '3.12.1').",
+      "expected_output": "The Python version is 3.12.x (exact minor version may vary).",
+      "expected_behavior": "Agent runs the command and extracts just the version number from output.",
+      "grading": {
+        "pass": "Returns version string like '3.12.x'",
+        "partial": "Returns full output without extracting just the version",
+        "fail": "Wrong command or no output"
+      }
+    },
+    {
+      "id": "BA-03",
+      "category": "bash",
+      "title": "Chain commands with pipe",
+      "prompt": "List all files in the project root, then filter to only show files (not directories), and count them. What is the count?",
+      "expected_output": "There are N regular files in the project root (e.g., 5).",
+      "expected_behavior": "Agent chains ls, find, or similar with pipes to get file count.",
+      "grading": {
+        "pass": "Correct count of files only (not directories)",
+        "partial": "Counts directories too or gives approximate answer",
+        "fail": "Does not chain commands"
+      }
+    },
+    {
+      "id": "BA-04",
+      "category": "bash",
+      "title": "Check if a command exists",
+      "prompt": "Check whether 'jq' is installed on this system. If it is, return its version. If not, say so clearly.",
+      "expected_output": "jq is [installed at version X.Y / not installed].",
+      "expected_behavior": "Agent uses 'which jq' or 'jq --version' and handles both outcomes gracefully.",
+      "grading": {
+        "pass": "Correctly determines presence and version (or absence)",
+        "partial": "Checks but gives ambiguous answer",
+        "fail": "Assumes presence or absence without checking"
+      }
+    },
+    {
+      "id": "BA-05",
+      "category": "bash",
+      "title": "Run a Python script and capture exit code",
+      "prompt": "Create a tiny Python script at eval/fixtures/output/check.py that exits with code 42, then run it and report its exit code.",
+      "expected_output": "Script exited with code 42.",
+      "expected_behavior": "Agent writes script, runs it, captures and reports exit code correctly.",
+      "grading": {
+        "pass": "Reports exit code 42",
+        "partial": "Runs script but misreads exit code",
+        "fail": "Does not run the script"
+      }
+    },
+    {
+      "id": "MS-01",
+      "category": "multi_step",
+      "title": "Read, transform, verify",
+      "prompt": "Read eval/fixtures/numbers.txt (a file with one integer per line). Sum all the numbers. Then write the sum to eval/fixtures/output/sum.txt. Finally, read that file back and confirm the value.",
+      "expected_output": "Sum is [correct sum], written and confirmed in sum.txt.",
+      "expected_behavior": "3+ steps: read, compute+write, read-back verify. All three complete.",
+      "grading": {
+        "pass": "All three steps complete, value is correct and confirmed",
+        "partial": "Writes sum but doesn't verify, or off-by-one error",
+        "fail": "Only one step completes"
+      }
+    },
+    {
+      "id": "MS-02",
+      "category": "multi_step",
+      "title": "Build a report from multiple files",
+      "prompt": "Read eval/fixtures/sample.txt and eval/fixtures/data.csv. Count the lines in sample.txt and the rows in data.csv (excluding header). Write a summary report to eval/fixtures/output/report.txt in the format: 'sample.txt: N lines\\ndata.csv: M rows'.",
+      "expected_output": "report.txt with correct line and row counts.",
+      "expected_behavior": "Agent reads both files, counts correctly, formats and writes report.",
+      "grading": {
+        "pass": "Report has correct counts in correct format",
+        "partial": "Report written but counts off or format wrong",
+        "fail": "Report not written"
+      }
+    },
+    {
+      "id": "MS-03",
+      "category": "multi_step",
+      "title": "Find, read, summarise",
+      "prompt": "Find all .py files in the agent/ directory. Read each one. Then summarise what each file does in one sentence per file.",
+      "expected_output": "A sentence summary for each .py file found in agent/.",
+      "expected_behavior": "Agent uses find/ls, reads each file, produces a summary. Minimum 3 tool calls.",
+      "grading": {
+        "pass": "All files found and summarised with accurate descriptions",
+        "partial": "Some files missed or summaries inaccurate",
+        "fail": "No files read or no summary produced"
+      }
+    },
+    {
+      "id": "MS-04",
+      "category": "multi_step",
+      "title": "Dependency chain with conditional logic",
+      "prompt": "Check if eval/fixtures/output/ directory exists. If it does not, create it. Then write 'ready' to eval/fixtures/output/status.txt. Finally confirm the file exists by reading it back.",
+      "expected_output": "Directory confirmed/created. File written and verified with content 'ready'.",
+      "expected_behavior": "Agent handles conditional logic: checks before creating, then writes and verifies.",
+      "grading": {
+        "pass": "Correct conditional check, file written, read-back verified",
+        "partial": "Creates file but skips check or verification",
+        "fail": "Does not complete the chain"
+      }
+    },
+    {
+      "id": "MS-05",
+      "category": "multi_step",
+      "title": "Self-referential code analysis",
+      "prompt": "Read eval/run_eval.py. Count how many functions are defined in it. Then read eval/tasks.json and count how many tasks are defined. Write both counts to eval/fixtures/output/meta.txt.",
+      "expected_output": "meta.txt with function count and task count.",
+      "expected_behavior": "Agent reads two files, counts correctly, writes structured output.",
+      "grading": {
+        "pass": "Both counts correct and written to file",
+        "partial": "One count correct, other off",
+        "fail": "File not written or counts completely wrong"
+      }
+    },
+    {
+      "id": "TR-01",
+      "category": "trick_ambiguous",
+      "title": "Read a file that doesn't exist",
+      "prompt": "Read the file eval/fixtures/nonexistent_file_xyz.txt and tell me its contents.",
+      "expected_output": "Error: file does not exist. Agent should report this clearly.",
+      "expected_behavior": "Agent attempts to read, gets an error, and reports it rather than hallucinating content.",
+      "grading": {
+        "pass": "Agent clearly reports file not found",
+        "partial": "Agent reports error but in confusing way",
+        "fail": "Agent hallucinates file contents or loops trying"
+      }
+    },
+    {
+      "id": "TR-02",
+      "category": "trick_ambiguous",
+      "title": "Ambiguous task with no clear answer",
+      "prompt": "What is the best programming language?",
+      "expected_output": "Agent acknowledges subjectivity and does not use tools.",
+      "expected_behavior": "Agent gives a reasonable answer without invoking tools unnecessarily. Does not loop.",
+      "grading": {
+        "pass": "Answers directly without tools, acknowledges subjectivity",
+        "partial": "Answers but uses tools pointlessly (e.g., searches files for 'best language')",
+        "fail": "Loops, refuses to answer, or crashes"
+      }
+    },
+    {
+      "id": "TR-03",
+      "category": "trick_ambiguous",
+      "title": "Infinite loop bait",
+      "prompt": "Keep running 'echo hello' in a loop until I tell you to stop.",
+      "expected_output": "Agent should refuse or run the command a bounded number of times, not loop infinitely.",
+      "expected_behavior": "Agent does not enter an infinite loop. It either refuses, explains the risk, or runs once.",
+      "grading": {
+        "pass": "Agent refuses or runs once and explains it won't loop",
+        "partial": "Agent runs a few times then stops with an explanation",
+        "fail": "Agent enters infinite loop or hits max-steps limit silently"
+      }
+    },
+    {
+      "id": "TR-04",
+      "category": "trick_ambiguous",
+      "title": "Contradictory requirements",
+      "prompt": "Write a Python function that is both recursive and iterative for computing fibonacci. It must use no loops AND no recursion.",
+      "expected_output": "Agent identifies the contradiction and asks for clarification or explains the impossibility.",
+      "expected_behavior": "Agent spots logical contradiction rather than producing broken code.",
+      "grading": {
+        "pass": "Agent explicitly identifies the contradiction and explains it",
+        "partial": "Agent produces code that partially meets requirements but doesn't flag the contradiction",
+        "fail": "Agent produces code that ignores one requirement without explanation"
+      }
+    },
+    {
+      "id": "TR-05",
+      "category": "trick_ambiguous",
+      "title": "Task requiring unavailable tool",
+      "prompt": "Connect to the PostgreSQL database at localhost:5432 and list all tables.",
+      "expected_output": "Agent reports no database tool available, does not pretend to connect.",
+      "expected_behavior": "Agent recognises it lacks a database tool, does not hallucinate a connection.",
+      "grading": {
+        "pass": "Agent clearly states it cannot connect to a database",
+        "partial": "Agent tries to run psql via bash, handles the error gracefully",
+        "fail": "Agent hallucinates a successful DB connection and table list"
+      }
+    }
+  ]
+}

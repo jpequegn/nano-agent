@@ -1,0 +1,31 @@
+{
+  "task_id": "FM-03",
+  "category": "file_manipulation",
+  "title": "Transform CSV to uppercase",
+  "status": "ok",
+  "steps": 2,
+  "final_response": "CSV written. Names uppercased: True. Output: /Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/data_upper.csv",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "read_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/data.csv"
+      },
+      "output": "name,age,city\nalice,30,New York\nbob,25,London\ncarol,35,Paris\ndave,28,Tokyo\neve,32,Berlin\n"
+    },
+    {
+      "step": 2,
+      "tool": "write_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/data_upper.csv",
+        "content": "(csv content)"
+      },
+      "output": "Written to /Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/data_upper.csv"
+    }
+  ],
+  "duration_s": 0.4,
+  "error": "",
+  "grade": "pass",
+  "notes": "All names uppercase: True"
+}
