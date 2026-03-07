@@ -2,6 +2,9 @@
 
 import argparse
 import sys
+from pathlib import Path
+
+from agent.logger import DEFAULT_DB_PATH
 
 
 def cmd_run(args: argparse.Namespace) -> None:
@@ -18,8 +21,20 @@ def cmd_logs(args: argparse.Namespace) -> None:
 
 
 def cmd_report(args: argparse.Namespace) -> None:
-    """Show failure taxonomy report (not yet implemented)."""
-    print("agent report: not yet implemented")
+    """Read all runs from SQLite and print a failure taxonomy report."""
+    from agent.report import generate_report
+
+    db_path = Path(args.db)
+    if not db_path.exists():
+        print(
+            f"[agent report] Database not found: {db_path}\n"
+            "Run some tasks first (agent run ...) or seed the DB with scripts/seed_demo_db.py",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    report = generate_report(db_path)
+    print(report)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -52,7 +67,16 @@ def build_parser() -> argparse.ArgumentParser:
     logs_parser.set_defaults(func=cmd_logs)
 
     # agent report
-    report_parser = subparsers.add_parser("report", help="Show failure taxonomy report")
+    report_parser = subparsers.add_parser(
+        "report",
+        help="Show failure taxonomy report from SQLite run history",
+    )
+    report_parser.add_argument(
+        "--db",
+        default=str(DEFAULT_DB_PATH),
+        metavar="PATH",
+        help=f"Path to the SQLite database (default: {DEFAULT_DB_PATH})",
+    )
     report_parser.set_defaults(func=cmd_report)
 
     return parser
