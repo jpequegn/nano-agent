@@ -3,6 +3,14 @@
 __version__ = "0.1.0"
 
 from agent.agent import Agent
+from agent.cost_tracker import CostTracker, RunCost, StepCost
 from agent.tool_registry import ToolNotFoundError, ToolRegistry
 
-__all__ = ["Agent", "ToolRegistry", "ToolNotFoundError"]
+__all__ = [
+    "Agent",
+    "CostTracker",
+    "RunCost",
+    "StepCost",
+    "ToolRegistry",
+    "ToolNotFoundError",
+]

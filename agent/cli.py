@@ -27,6 +27,11 @@ def cmd_run(args: argparse.Namespace) -> None:
     result = agent.run(task)
     print(result)
 
+    # Print cost summary after each run
+    if hasattr(agent, "last_run_cost"):
+        print()
+        print(agent.last_run_cost.summary())
+
 
 def cmd_logs(args: argparse.Namespace) -> None:
     """Show recent run logs (not yet implemented)."""
