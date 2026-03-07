@@ -1,0 +1,22 @@
+{
+  "task_id": "TR-05",
+  "category": "trick_ambiguous",
+  "title": "Task requiring unavailable tool",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "I cannot connect to a PostgreSQL database \u2014 no database client tool is registered in this agent's tool set. The available tools are: read_file, write_file, append_file, run_bash, list_files, path_exists.\n\nAttempted: psql command returned: /bin/sh: psql: command not found\npsql not available or connection failed",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "run_bash",
+      "input": {
+        "command": "psql postgresql://localhost:5432 -c '\\dt'"
+      },
+      "output": ""
+    }
+  ],
+  "duration_s": 0.5,
+  "error": "",
+  "grade": "partial",
+  "notes": "Tried bash as fallback. A real LLM might hallucinate a connection or skip the check entirely."
+}

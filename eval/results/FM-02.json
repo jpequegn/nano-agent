@@ -1,0 +1,23 @@
+{
+  "task_id": "FM-02",
+  "category": "file_manipulation",
+  "title": "Write a new file with specific content",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "File created with content: 'Hello, nano-agent!'",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "write_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/hello.txt",
+        "content": "Hello, nano-agent!"
+      },
+      "output": "Written 18 bytes"
+    }
+  ],
+  "duration_s": 0.2,
+  "error": "",
+  "grade": "pass",
+  "notes": "Content matches: True"
+}

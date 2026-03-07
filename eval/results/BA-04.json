@@ -1,0 +1,22 @@
+{
+  "task_id": "BA-04",
+  "category": "bash",
+  "title": "Check if a command exists",
+  "status": "ok",
+  "steps": 1,
+  "final_response": "/usr/bin/jq\njq-1.7.1-apple",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "run_bash",
+      "input": {
+        "command": "which jq && jq --version"
+      },
+      "output": "/usr/bin/jq\njq-1.7.1-apple"
+    }
+  ],
+  "duration_s": 0.4,
+  "error": "",
+  "grade": "pass",
+  "notes": "jq installed: True. Output: '/usr/bin/jq\\njq-1.7.1-apple'"
+}

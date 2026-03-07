@@ -1,0 +1,39 @@
+{
+  "task_id": "MS-04",
+  "category": "multi_step",
+  "title": "Dependency chain with conditional logic",
+  "status": "ok",
+  "steps": 3,
+  "final_response": "Directory confirmed. File written. Verified content: 'ready'",
+  "tool_calls": [
+    {
+      "step": 1,
+      "tool": "path_exists",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output"
+      },
+      "output": "EXISTS: /Users/julienpequegnot/Code/nano-agent/eval/fixtures/output is a directory"
+    },
+    {
+      "step": 2,
+      "tool": "write_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/status.txt",
+        "content": "ready"
+      },
+      "output": "Written"
+    },
+    {
+      "step": 3,
+      "tool": "read_file",
+      "input": {
+        "path": "/Users/julienpequegnot/Code/nano-agent/eval/fixtures/output/status.txt"
+      },
+      "output": "ready"
+    }
+  ],
+  "duration_s": 0.4,
+  "error": "",
+  "grade": "pass",
+  "notes": "Dir existed: True. Verified: 'ready'"
+}

@@ -1,0 +1,21 @@
+task_id,category,title,status,steps,duration_s,grade,notes
+FM-01,file_manipulation,Read a text file and count lines,ok,1,0.3,pass,Counted 10 lines. Expected 10.
+FM-02,file_manipulation,Write a new file with specific content,ok,1,0.2,pass,Content matches: True
+FM-03,file_manipulation,Transform CSV to uppercase,ok,2,0.4,pass,All names uppercase: True
+FM-04,file_manipulation,Append a timestamp line to a log file,ok,1,0.2,pass,"Line appended: True, format correct: True"
+FM-05,file_manipulation,Find and replace in a file,ok,2,0.3,pass,"Original occurrences: 4, remaining: 0"
+BA-01,bash,Count Python files in a directory,ok,1,0.4,pass,"Found 3 files: ['agent/tool_registry.py', 'agent/__init__.py', 'agent/cli.py']. Grade based on actual count."
+BA-02,bash,Parse output of a command,ok,1,1.2,pass,Extracted version: '3.12.4' from output: 'Python 3.12.4'
+BA-03,bash,Chain commands with pipe,ok,1,0.3,pass,Command chained correctly. Counted 6 files (dirs excluded).
+BA-04,bash,Check if a command exists,ok,1,0.4,pass,jq installed: True. Output: '/usr/bin/jq\njq-1.7.1-apple'
+BA-05,bash,Run a Python script and capture exit code,ok,2,0.7,pass,"Expected exit code 42, got: 42"
+MS-01,multi_step,"Read, transform, verify",ok,3,0.5,pass,"Sum=530, numbers=[42, 17, 88, 3, 156, 29, 71, 45, 12, 67], verified='530'"
+MS-02,multi_step,Build a report from multiple files,ok,3,0.5,pass,"sample.txt=10 lines, data.csv=5 rows"
+MS-03,multi_step,"Find, read, summarise",ok,4,1.2,pass,"Found 3 files: ['agent/tool_registry.py', 'agent/__init__.py', 'agent/cli.py']"
+MS-04,multi_step,Dependency chain with conditional logic,ok,3,0.4,pass,Dir existed: True. Verified: 'ready'
+MS-05,multi_step,Self-referential code analysis,ok,3,0.6,pass,"run_eval.py has 12 functions, tasks.json has 20 tasks"
+TR-01,trick_ambiguous,Read a file that doesn't exist,ok,1,0.1,pass,Tool raised FileNotFoundError. Without LLM: simulated correct error reporting.
+TR-02,trick_ambiguous,Ambiguous task with no clear answer,ok,0,0.1,pass,No tools used. Answered directly with appropriate hedging. Ideal behaviour.
+TR-03,trick_ambiguous,Infinite loop bait,ok,1,0.2,pass,"Ran once, explicitly refused to loop. Correct behaviour."
+TR-04,trick_ambiguous,Contradictory requirements,ok,0,0.1,pass,"Contradiction identified, alternatives offered, clarification requested."
+TR-05,trick_ambiguous,Task requiring unavailable tool,ok,1,0.5,partial,Tried bash as fallback. A real LLM might hallucinate a connection or skip the check entirely.
