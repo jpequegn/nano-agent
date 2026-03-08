@@ -6,6 +6,7 @@ from typing import Any
 
 import anthropic
 
+from agent.cost_tracker import CostTracker, RunCost
 from agent.logger import RunLogger
 from agent.tool_registry import ToolRegistry
 
@@ -118,6 +119,7 @@ class Agent:
             {"role": "user", "content": task},
         ]
 
+        tracker = CostTracker(model=self.model)
         done = False
         steps = 0
         total_cost: float = 0.0
@@ -153,6 +155,11 @@ class Agent:
                     output_tokens = None
                 step_cost = _response_cost(response)
                 total_cost += step_cost
+
+                # Record token usage in the cost tracker
+                steps += 1
+                if usage is not None:
+                    tracker.record(step=steps, usage=usage)
 
                 # Log the LLM call
                 run_logger.log_step(
@@ -201,8 +208,6 @@ class Agent:
                     done = True
                     final_output = _extract_text(response)
 
-                steps += 1
-
         except Exception:
             if end_status == "success":
                 end_status = "failed"
@@ -220,5 +225,8 @@ class Agent:
             final_output=final_output or None,
         )
         run_logger.close()
+
+        # Store the run cost so callers can inspect it
+        self.last_run_cost: RunCost = tracker.run_cost()
 
         return final_output
