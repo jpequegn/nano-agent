@@ -6,6 +6,7 @@ from typing import Any
 
 import anthropic
 
+from agent.cost_tracker import CostTracker, RunCost
 from agent.tool_registry import ToolRegistry
 
 # ---------------------------------------------------------------------------
@@ -93,6 +94,7 @@ class Agent:
             {"role": "user", "content": task},
         ]
 
+        tracker = CostTracker(model=self.model)
         done = False
         steps = 0
 
@@ -108,6 +110,11 @@ class Agent:
                 tools=self.registry.to_api_schema(),
                 messages=messages,
             )
+
+            # Record token usage for this step
+            steps += 1
+            if hasattr(response, "usage") and response.usage is not None:
+                tracker.record(step=steps, usage=response.usage)
 
             # Append the assistant turn to the conversation history
             messages.append({"role": "assistant", "content": response.content})
@@ -138,6 +145,7 @@ class Agent:
             else:
                 done = True
 
-            steps += 1
+        # Store the run cost so callers can inspect it
+        self.last_run_cost: RunCost = tracker.run_cost()
 
         return _extract_text(response)  # type: ignore[possibly-undefined]
