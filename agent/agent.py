@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import time
 from typing import Any
 
 import anthropic
 
 from agent.cost_tracker import CostTracker, RunCost
+from agent.exceptions import MaxStepsExceeded, RunTimeout
 from agent.logger import RunLogger
 from agent.tool_registry import ToolRegistry
 
@@ -67,7 +69,12 @@ class Agent:
         registry: The :class:`~agent.tool_registry.ToolRegistry` holding
             the tools available to the agent.
         model: Anthropic model identifier to use.
-        max_steps: Safety cap on the number of tool-call rounds.
+        max_steps: Safety cap on the number of tool-call rounds.  When the
+            agent exceeds this limit :class:`~agent.exceptions.MaxStepsExceeded`
+            is raised and the partial run is recorded to the log.
+        timeout_seconds: Wall-clock time limit for the entire run in seconds.
+            When exceeded :class:`~agent.exceptions.RunTimeout` is raised and
+            the partial run is recorded to the log.  Pass ``None`` to disable.
         client: Optional pre-configured :class:`anthropic.Anthropic` client
             (useful for testing with a mock).
     """
@@ -77,11 +84,13 @@ class Agent:
         registry: ToolRegistry,
         model: str = "claude-3-5-haiku-20241022",
         max_steps: int = 20,
+        timeout_seconds: float | None = 120.0,
         client: anthropic.Anthropic | None = None,
     ) -> None:
         self.registry = registry
         self.model = model
         self.max_steps = max_steps
+        self.timeout_seconds = timeout_seconds
         self._client = client or anthropic.Anthropic()
 
     # ------------------------------------------------------------------
@@ -109,8 +118,9 @@ class Agent:
             The final text response from the model.
 
         Raises:
-            RuntimeError: If ``max_steps`` is exceeded before the model
+            MaxStepsExceeded: If ``max_steps`` is exceeded before the model
                 produces a non-tool-use response.
+            RunTimeout: If ``timeout_seconds`` elapses before the run finishes.
         """
         run_logger = RunLogger(task=task, model=self.model)
         run_logger.open()
@@ -125,14 +135,27 @@ class Agent:
         total_cost: float = 0.0
         final_output: str = ""
         end_status: str = "success"
+        start_time: float = time.monotonic()
 
         try:
             while not done:
+                # --- guard: max steps ---
                 if steps >= self.max_steps:
                     end_status = "max_steps"
-                    raise RuntimeError(
-                        f"Agent exceeded max_steps={self.max_steps} without finishing."
+                    raise MaxStepsExceeded(
+                        max_steps=self.max_steps,
+                        partial_output=final_output,
                     )
+
+                # --- guard: wall-clock timeout ---
+                if self.timeout_seconds is not None:
+                    elapsed = time.monotonic() - start_time
+                    if elapsed >= self.timeout_seconds:
+                        end_status = "timeout"
+                        raise RunTimeout(
+                            timeout_seconds=self.timeout_seconds,
+                            partial_output=final_output,
+                        )
 
                 response = self._client.messages.create(
                     model=self.model,
@@ -208,9 +231,16 @@ class Agent:
                     done = True
                     final_output = _extract_text(response)
 
+        except (MaxStepsExceeded, RunTimeout):
+            run_logger.finish(
+                status=end_status,
+                total_cost_usd=total_cost,
+                final_output=final_output or None,
+            )
+            run_logger.close()
+            raise
         except Exception:
-            if end_status == "success":
-                end_status = "failed"
+            end_status = "failed"
             run_logger.finish(
                 status=end_status,
                 total_cost_usd=total_cost,
