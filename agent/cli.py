@@ -1,10 +1,14 @@
 """CLI entrypoint for nano-agent."""
 
+from __future__ import annotations
+
 import argparse
 import sys
 from pathlib import Path
 
 from agent.logger import DEFAULT_DB_PATH
+
+from agent.logger import list_recent_runs
 
 
 def cmd_run(args: argparse.Namespace) -> None:
@@ -37,8 +41,35 @@ def cmd_run(args: argparse.Namespace) -> None:
 
 
 def cmd_logs(args: argparse.Namespace) -> None:
-    """Show recent run logs (not yet implemented)."""
-    print("agent logs: not yet implemented")
+    """List recent runs from the SQLite database."""
+    runs = list_recent_runs(limit=args.limit)
+
+    if not runs:
+        print("No runs recorded yet. Run `agent run <task>` to get started.")
+        return
+
+    # Header
+    header = (
+        f"{'ID':36}  {'STATUS':10}  {'STEPS':5}  {'COST (USD)':10}  "
+        f"{'MODEL':30}  {'STARTED':26}  TASK"
+    )
+    print(header)
+    print("-" * len(header))
+
+    for run in runs:
+        run_id = run["id"]
+        status = run["status"] or "running"
+        steps = run["step_count"]
+        cost = run["total_cost_usd"]
+        cost_str = f"${cost:.6f}" if cost is not None else "n/a"
+        model = (run["model"] or "")[:30]
+        started = (run["started_at"] or "")[:26]
+        task = (run["task"] or "")[:60]
+
+        print(
+            f"{run_id}  {status:<10}  {steps:5}  {cost_str:>10}  "
+            f"{model:<30}  {started:<26}  {task}"
+        )
 
 
 def cmd_report(args: argparse.Namespace) -> None:
@@ -85,6 +116,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     # agent logs
     logs_parser = subparsers.add_parser("logs", help="List recent runs")
+    logs_parser.add_argument(
+        "--limit",
+        type=int,
+        default=20,
+        help="Maximum number of runs to display (default: 20)",
+    )
     logs_parser.set_defaults(func=cmd_logs)
 
     # agent report
